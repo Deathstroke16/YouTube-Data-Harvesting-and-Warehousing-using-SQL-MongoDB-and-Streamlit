@@ -14,23 +14,24 @@ from PIL import Image
 
 # SETTING PAGE CONFIGURATIONS
 icon = Image.open("youtube-logo.png")
-st.set_page_config(page_title= "Youtube Data Harvesting and Warehousing using streamlit",
-                   page_icon= icon,
-                   layout= "wide",
-                   initial_sidebar_state= "expanded",
-                   menu_items={'About': """#Author Swapnil Aknurwar*"""})
+st.set_page_config(
+    page_title="YouTube Data Harvesting and Warehousing using Streamlit",
+    page_icon=icon,
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={'About': """#Author Swapnil Aknurwar*"""})
 
 # CREATING OPTION MENU
 with st.sidebar:
-    selected = option_menu(None, ["Home","Extract and Transform","View"], 
-                           icons=["house-door-fill","tools","card-text"],
+    selected = option_menu(None, ["Home", "Extract and Transform", "View"],
+                           icons=["house-door-fill", "tools", "card-text"],
                            default_index=0,
                            orientation="vertical",
-                           styles={"nav-link": {"font-size": "30px", "text-align": "centre", "margin": "0px", 
-                                                "--hover-color": "#C80101"},
-                                   "icon": {"font-size": "30px"},
-                                   "container" : {"max-width": "6000px"},
-                                   "nav-link-selected": {"background-color": "#C80101"}})
+                           styles={
+                               "nav-link": {"font-size": "18px", "text-align": "center", "margin": "0px", "--hover-color": "#C80101"},
+                               "icon": {"font-size": "24px"},
+                               "container": {"max-width": "6000px"},
+                               "nav-link-selected": {"background-color": "#C80101"}})
 
 # Bridging a connection with MongoDB Atlas and Creating a new database(youtube_data)
 client = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -158,23 +159,17 @@ def channel_names():
     return ch_name
 
 
-# HOME PAGE
 if selected == "Home":
-    # Title Image
-    
-    col1,col2 = st.columns(2,gap= 'medium')
-    col1.markdown("### :blue[Domain] : Social Media")
-    col1.markdown("### :blue[Technologies used] : Python,MongoDB, Youtube Data API, MySql, Streamlit")
-    col1.markdown("#### :blue[Overview] : Retrieve YouTube channel data via the Google API, store it in MongoDB, transform and migrate the data into a SQL database, and present insights through a Streamlit app. This project integrates Python, MongoDB, MySQL, Google API, and Streamlit for efficient YouTube data management and visualization.")
-    col2.markdown("#   ")
-    col2.markdown("#   ")
-    col2.markdown("#   ")
-    col2.image("yt1.gif")
+    st.image("yt1.gif", width=500)
+    st.title("YouTube Data Harvesting and Warehousing")
+    st.markdown("Retrieve YouTube data, store in MongoDB, transform to MySQL, and visualize with Streamlit.")
+    st.markdown("## :blue_book: Domain: Social Media")
+    st.markdown("## :toolbox: Technologies: Python, MongoDB, YouTube API, MySQL, Streamlit")
     
     
 # EXTRACT and TRANSFORM PAGE
 if selected == "Extract and Transform":
-    tab1,tab2 = st.tabs(["$\huge EXTRACT $", "$\huge TRANSFORM $"])
+    tab1, tab2 = st.tabs(["$\huge📤 EXTRACTION$", "$\huge🔄 TRANSFORMATION$"])
     
     # EXTRACT TAB
     with tab1:
@@ -352,7 +347,25 @@ if selected == "Extract and Transform":
             
 # VIEW PAGE
 if selected == "View":
-    
+    # Additional Styling
+    st.markdown(
+    """
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .sidebar .sidebar-content {
+            background-color: #1E1E1E;
+            color: #FFFFFF;
+        }
+        .main .block-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
     st.write("## :orange[Select any question to get Insights]")
     questions = st.selectbox('Questions',
     ['Click the question that you would like to query',
