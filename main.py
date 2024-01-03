@@ -1,4 +1,4 @@
-############################################importing the necessary libraries###########################################
+############################################[ Importing the necessary libraries ]###########################################
 from datetime import timedelta
 import logging
 import pandas as pd
@@ -10,7 +10,7 @@ import pymongo
 from googleapiclient.discovery import build
 from PIL import Image
 
-########################################### SETTING PAGE CONFIGURATIONS ###########################################
+###########################################[ SETTING PAGE CONFIGURATIONS ]###########################################
 icon = Image.open("youtube-logo.png")
 st.set_page_config(
     page_title="YouTube Data Harvesting and Warehousing using Streamlit",
@@ -19,7 +19,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
     menu_items={'About': """#Author Swapnil Aknurwar*"""})
 
-############################################ CREATING OPTION MENU###########################################
+############################################[ CREATING OPTION MENU ]###########################################
 with st.sidebar:
     selected = option_menu(None, ["Home", "Extract and Transform", "View"],
                            icons=["house-door-fill", "tools", "card-text"],
@@ -31,11 +31,11 @@ with st.sidebar:
                                "container": {"max-width": "6000px"},
                                "nav-link-selected": {"background-color": "#C80101"}})
 
-############################################ Bridging a connection with MongoDB Atlas and Creating a new database(youtube_data)###########################################
+############################################[ Bridging a connection with MongoDB Atlas and Creating a new database(youtube_data) ]###########################################
 client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = client['youtube_data']
 
-############################################ CONNECTING WITH MYSQL DATABASE###########################################
+############################################[ CONNECTING WITH MYSQL DATABASE ]###########################################
 mydb = sql.connect(host="localhost",
                    user="root",
                    password="root",
@@ -43,12 +43,12 @@ mydb = sql.connect(host="localhost",
                   )
 mycursor = mydb.cursor(buffered=True)
 
-############################################ BUILDING CONNECTION WITH YOUTUBE API###########################################
+############################################[ BUILDING CONNECTION WITH YOUTUBE API ]###########################################
 api_key = "AIzaSyAVLSg5UcgPCgUJJrI6IpueEoPz0iiGI-g"
 youtube = build('youtube','v3',developerKey=api_key)
 
 
-############################################ FUNCTION TO GET CHANNEL DETAILS###########################################
+############################################[ FUNCTION TO GET CHANNEL DETAILS ]###########################################
 def get_channel_details(channel_id):
     ch_data = []
     response = youtube.channels().list(part = 'snippet,contentDetails,statistics',
