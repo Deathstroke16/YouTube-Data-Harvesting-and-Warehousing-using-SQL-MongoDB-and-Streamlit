@@ -1,4 +1,4 @@
-#importing the necessary libraries
+############################################importing the necessary libraries###########################################
 from datetime import timedelta
 import logging
 import pandas as pd
@@ -10,9 +10,7 @@ import pymongo
 from googleapiclient.discovery import build
 from PIL import Image
 
-
-
-# SETTING PAGE CONFIGURATIONS
+########################################### SETTING PAGE CONFIGURATIONS ###########################################
 icon = Image.open("youtube-logo.png")
 st.set_page_config(
     page_title="YouTube Data Harvesting and Warehousing using Streamlit",
@@ -21,7 +19,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
     menu_items={'About': """#Author Swapnil Aknurwar*"""})
 
-# CREATING OPTION MENU
+############################################ CREATING OPTION MENU###########################################
 with st.sidebar:
     selected = option_menu(None, ["Home", "Extract and Transform", "View"],
                            icons=["house-door-fill", "tools", "card-text"],
@@ -33,11 +31,11 @@ with st.sidebar:
                                "container": {"max-width": "6000px"},
                                "nav-link-selected": {"background-color": "#C80101"}})
 
-# Bridging a connection with MongoDB Atlas and Creating a new database(youtube_data)
+############################################ Bridging a connection with MongoDB Atlas and Creating a new database(youtube_data)###########################################
 client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = client['youtube_data']
 
-# CONNECTING WITH MYSQL DATABASE
+############################################ CONNECTING WITH MYSQL DATABASE###########################################
 mydb = sql.connect(host="localhost",
                    user="root",
                    password="root",
@@ -45,12 +43,12 @@ mydb = sql.connect(host="localhost",
                   )
 mycursor = mydb.cursor(buffered=True)
 
-# BUILDING CONNECTION WITH YOUTUBE API
+############################################ BUILDING CONNECTION WITH YOUTUBE API###########################################
 api_key = "AIzaSyAVLSg5UcgPCgUJJrI6IpueEoPz0iiGI-g"
 youtube = build('youtube','v3',developerKey=api_key)
 
 
-# FUNCTION TO GET CHANNEL DETAILS
+############################################ FUNCTION TO GET CHANNEL DETAILS###########################################
 def get_channel_details(channel_id):
     ch_data = []
     response = youtube.channels().list(part = 'snippet,contentDetails,statistics',
@@ -70,7 +68,7 @@ def get_channel_details(channel_id):
     return ch_data
 
 
-# FUNCTION TO GET VIDEO IDS
+############################################[ FUNCTION TO GET VIDEO IDS ]###########################################
 def get_channel_videos(channel_id):
     video_ids = []
     # get Uploads playlist id
@@ -94,7 +92,7 @@ def get_channel_videos(channel_id):
     return video_ids
 
 
-# FUNCTION TO GET VIDEO DETAILS
+############################################[ FUNCTION TO GET VIDEO DETAILS ]###########################################
 def get_video_details(v_ids):
     video_stats = []
     
@@ -123,7 +121,7 @@ def get_video_details(v_ids):
     return video_stats
 
 
-# FUNCTION TO GET COMMENT DETAILS
+############################################[ FUNCTION TO GET COMMENT DETAILS ]###########################################
 def get_comments_details(v_id):
     comment_data = []
     try:
@@ -151,7 +149,7 @@ def get_comments_details(v_id):
     return comment_data
 
 
-# FUNCTION TO GET CHANNEL NAMES FROM MONGODB
+############################################[ FUNCTION TO GET CHANNEL NAMES FROM MONGODB ]###########################################
 def channel_names():   
     ch_name = []
     for i in db.channel_details.find():
@@ -167,7 +165,7 @@ if selected == "Home":
     st.markdown("## :toolbox: Technologies: Python, MongoDB, YouTube API, MySQL, Streamlit")
     
     
-# EXTRACT and TRANSFORM PAGE
+############################################[ EXTRACT and TRANSFORM PAGE ]###########################################
 if selected == "Extract and Transform":
     tab1, tab2 = st.tabs(["$\huge📤 EXTRACTION$", "$\huge🔄 TRANSFORMATION$"])
     
@@ -205,7 +203,7 @@ if selected == "Extract and Transform":
                 collections3.insert_many(comm_details)
                 st.success("Upload to MogoDB successful !!")
       
-    # TRANSFORM TAB
+    ############################################[ TRANSFORM TAB ]###########################################
     with tab2:     
         st.markdown("#   ")
         st.markdown("### Select a channel to begin Transformation to SQL")
@@ -245,7 +243,7 @@ if selected == "Extract and Transform":
 
             return str(delta)
 
-        # Function to handle encoding issues
+        ############################################[ Function to handle encoding issues ]###########################################
         def safe_encode(value):
             try:
                 # Try to encode the value as UTF-8 and decode it back
@@ -275,7 +273,7 @@ if selected == "Extract and Transform":
                 # Use logging to print values for debugging
                 logging.debug(f"Values: {video_id}, {channel_name}, {channel_id}, {title}, {tags}, {thumbnail}, {description}, {published_date}, {duration}, {views}, {likes}, {comments}, {favorite_count}, {definition}, {caption_status}")
 
-                # Convert the list of tags to a string
+                ############################################[ Convert the list of tags to a string ]###########################################
                 tags_list = video.get('Tags', [])
                 tags_str = ', '.join(tags_list) if tags_list is not None else ''
                 try:
@@ -345,7 +343,7 @@ if selected == "Extract and Transform":
             except:
                 st.error("Channel details already transformed!!")
             
-# VIEW PAGE
+############################################[ VIEW PAGE ]###########################################
 if selected == "View":
     # Additional Styling
     st.markdown(
@@ -503,4 +501,3 @@ if selected == "View":
                      color=mycursor.column_names[0]
                     )
         st.plotly_chart(fig,use_container_width=True)
-
